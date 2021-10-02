@@ -7,11 +7,11 @@ public class Cliente {
 	private int id;
 	private String nome;
 	private String telefone;
-	private String cpf;
-	private String cnpj;
 	private String endereco;
+	private String cpf_cnpj;
 	private ArrayList<Conta> contas;
 	private String tipo;
+	private String data;
 	
 	
 	public int getId() {
@@ -33,18 +33,7 @@ public class Cliente {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-	public String getCpf() {
-		return cpf;
-	}
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-	public String getCnpj() {
-		return cnpj;
-	}
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
-	}
+	
 	public String getEndereco() {
 		return endereco;
 	}
@@ -62,6 +51,18 @@ public class Cliente {
 	}
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+	public String getCpf_cnpj() {
+		return cpf_cnpj;
+	}
+	public void setCpf_cnpj(String cpf_cnpj) {
+		this.cpf_cnpj = cpf_cnpj;
+	}
+	public String getData() {
+		return data;
+	}
+	public void setData(String data) {
+		this.data = data;
 	}
 	
 	

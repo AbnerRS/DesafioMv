@@ -10,6 +10,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import br.com.desafiomv.model.Cliente;
+import br.com.desafiomv.model.Conta;
+
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -17,17 +21,21 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
 
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tbClientes;
 	private JTextField textNome;
 	private JTextField textCpf;
 	private JTextField textEndereco;
-	private JTextField textField;
+	private JTextField textTelefone;
 	private JTextField textFieldRazaoSocial;
 	private JTextField textFieldNire;
+	private JTextField textSaldo;
 
 	/**
 	 * Launch the application.
@@ -49,6 +57,8 @@ public class Principal extends JFrame {
 	 * Create the frame.
 	 */
 	public Principal() {
+		ArrayList<Cliente> listaClientes = new ArrayList();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 763, 416);
 		contentPane = new JPanel();
@@ -67,9 +77,9 @@ public class Principal extends JFrame {
 		scrollPane_1.setBounds(10, 185, 712, 143);
 		panel.add(scrollPane_1);
 		
-		table = new JTable();
-		scrollPane_1.setViewportView(table);
-		table.setModel(new DefaultTableModel(
+		tbClientes = new JTable();
+		scrollPane_1.setViewportView(tbClientes);
+		tbClientes.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -83,8 +93,8 @@ public class Principal extends JFrame {
 				return columnEditables[column];
 			}
 		});
-		table.getColumnModel().getColumn(5).setPreferredWidth(82);
-		table.getColumnModel().getColumn(6).setPreferredWidth(77);
+		tbClientes.getColumnModel().getColumn(5).setPreferredWidth(82);
+		tbClientes.getColumnModel().getColumn(6).setPreferredWidth(77);
 		
 		JLabel lblNewLabel = new JLabel("Nome:");
 		lblNewLabel.setBounds(10, 11, 46, 14);
@@ -109,15 +119,44 @@ public class Principal extends JFrame {
 		panel.add(lblNewLabel_1);
 		
 		textEndereco = new JTextField();
-		textEndereco.setBounds(76, 36, 399, 20);
+		textEndereco.setBounds(76, 36, 467, 20);
 		panel.add(textEndereco);
 		textEndereco.setColumns(10);
 		
-		JLabel lblNewLabel_2 = new JLabel("Contas:");
-		lblNewLabel_2.setBounds(481, 11, 62, 14);
-		panel.add(lblNewLabel_2);
+		JComboBox comboBoxTipo = new JComboBox();
+		comboBoxTipo.setModel(new DefaultComboBoxModel(new String[] {"F\u00EDsica", "Jur\u00EDdica"}));
+		comboBoxTipo.setBounds(365, 7, 87, 22);
+		panel.add(comboBoxTipo);
 		
 		JButton btnNovoCliente = new JButton("Novo");
+		btnNovoCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Cliente c = new Cliente();
+
+				c.setNome(textNome.getText());
+				c.setTelefone(textTelefone.getText());
+				c.setEndereco(textEndereco.getText());
+				c.setCpf_cnpj(textCpf.getText());
+				c.setTipo(comboBoxTipo.getSelectedItem().toString());
+				
+				
+				listaClientes.add(c);
+
+				DefaultTableModel modelo = (DefaultTableModel) tbClientes.getModel();
+
+				modelo.setNumRows(0);
+
+				for (Cliente cl : listaClientes) {
+					modelo.addRow(new Object[] {
+
+							cl.getId() , cl.getNome(), cl.getEndereco(), cl.getTelefone(), cl.getCpf_cnpj(), cl.getTipo()
+							
+					});
+				}
+				
+			}
+		});
 		btnNovoCliente.setBounds(98, 151, 102, 23);
 		panel.add(btnNovoCliente);
 		
@@ -129,27 +168,18 @@ public class Principal extends JFrame {
 		btnExcluirCliente.setBounds(456, 151, 102, 23);
 		panel.add(btnExcluirCliente);
 		
-		JComboBox comboBoxContas = new JComboBox();
-		comboBoxContas.setBounds(532, 7, 87, 22);
-		panel.add(comboBoxContas);
-		
 		JLabel lblNewLabel_3 = new JLabel("Telefone:");
 		lblNewLabel_3.setBounds(10, 98, 62, 14);
 		panel.add(lblNewLabel_3);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(76, 95, 135, 20);
-		panel.add(textField);
+		textTelefone = new JTextField();
+		textTelefone.setColumns(10);
+		textTelefone.setBounds(76, 95, 135, 20);
+		panel.add(textTelefone);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("Pessoa:");
-		lblNewLabel_2_1.setBounds(277, 11, 54, 14);
+		lblNewLabel_2_1.setBounds(301, 11, 54, 14);
 		panel.add(lblNewLabel_2_1);
-		
-		JComboBox comboBoxTipo = new JComboBox();
-		comboBoxTipo.setModel(new DefaultComboBoxModel(new String[] {"F\u00EDsica", "Jur\u00EDdica"}));
-		comboBoxTipo.setBounds(329, 7, 87, 22);
-		panel.add(comboBoxTipo);
 		
 		JLabel lblRazoSocial = new JLabel("Raz\u00E3o Social:");
 		lblRazoSocial.setBounds(277, 70, 87, 14);
@@ -168,6 +198,15 @@ public class Principal extends JFrame {
 		textFieldNire.setColumns(10);
 		textFieldNire.setBounds(365, 95, 135, 20);
 		panel.add(textFieldNire);
+		
+		JLabel lblNewLabel_2 = new JLabel("Saldo Inicial :");
+		lblNewLabel_2.setBounds(549, 98, 70, 14);
+		panel.add(lblNewLabel_2);
+		
+		textSaldo = new JTextField();
+		textSaldo.setColumns(10);
+		textSaldo.setBounds(615, 95, 77, 20);
+		panel.add(textSaldo);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Contas", null, panel_1, null);
