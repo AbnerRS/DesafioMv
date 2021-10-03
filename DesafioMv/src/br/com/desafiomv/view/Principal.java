@@ -25,8 +25,15 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class Principal extends JFrame {
+import java.sql.*;
+import br.com.desafiomv.dao.*;
 
+public class Principal extends JFrame {
+	
+	private PreparedStatement pst = null;
+	Connection con = null;
+	ResultSet rs = null;
+	
 	private JPanel contentPane;
 	private JTable tbClientes;
 	private JTextField textNome;
@@ -36,6 +43,7 @@ public class Principal extends JFrame {
 	private JTextField textFieldRazaoSocial;
 	private JTextField textFieldNire;
 	private JTextField textSaldo;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -57,6 +65,8 @@ public class Principal extends JFrame {
 	 * Create the frame.
 	 */
 	public Principal() {
+		
+		con = DataSource.getConnection();
 		ArrayList<Cliente> listaClientes = new ArrayList();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -132,6 +142,7 @@ public class Principal extends JFrame {
 		btnNovoCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				ClienteDB cdb = new ClienteDB();
 				Cliente c = new Cliente();
 
 				c.setNome(textNome.getText());
@@ -142,7 +153,8 @@ public class Principal extends JFrame {
 				
 				
 				listaClientes.add(c);
-
+				cdb.cadastrarCliente(c);
+				
 				DefaultTableModel modelo = (DefaultTableModel) tbClientes.getModel();
 
 				modelo.setNumRows(0);
@@ -154,6 +166,8 @@ public class Principal extends JFrame {
 							
 					});
 				}
+				
+				
 				
 			}
 		});
@@ -211,5 +225,34 @@ public class Principal extends JFrame {
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Contas", null, panel_1, null);
 		panel_1.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 65, 712, 212);
+		panel_1.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"ID", "Cliente", "Mov. Cr\u00E9dito", "Mov. D\u00E9bito", "Total Mov.", "Valor Pago Mov.", "Saldo Inicial", "Saldo Atual"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, true, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane.setViewportView(table);
+		
+		JButton btnExcluirConta = new JButton("Excluir Conta");
+		btnExcluirConta.setBounds(10, 31, 122, 23);
+		panel_1.add(btnExcluirConta);
+		
+		JButton btnGerarRelatorios = new JButton("Gerar Relat\u00F3rios da conta");
+		btnGerarRelatorios.setBounds(525, 288, 197, 40);
+		panel_1.add(btnGerarRelatorios);
 	}
 }

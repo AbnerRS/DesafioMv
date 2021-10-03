@@ -15,9 +15,11 @@ public class DataSource {
 
 	private static Connection connection;
 
-	public DataSource() {
+	public  DataSource() {
 
+		if (connection == null) {
 		try {
+				
 			String driver = "oracle.jdbc.OracleDriver";
 			hostname = "192.168.0.144";
 			port = 1521;
@@ -34,20 +36,29 @@ public class DataSource {
 
 			System.out.println("Conectado");
 
-		} catch (ClassNotFoundException ex) {
+			} catch (ClassNotFoundException ex) {
 			System.err.println("ERRO ao carregar driver" + ex.getMessage());
 		} catch (Exception ex) {
 			System.out.println("Erro ao se conectar");
 		}
-
+	
+		
+	}
 	}
 
 	public static Connection getConnection() {
 		return connection;
 	}
 
-	public void closeDataSource() {
+	
+	public static void closeDataSource() {
+		try {
+			connection.close();
+			connection = null;
 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
